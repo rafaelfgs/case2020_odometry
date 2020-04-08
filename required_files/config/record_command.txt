@@ -1,0 +1,1 @@
+rosbag record wheel/odom wheel_ekf/odom visual/odom lidar_noimu/odom lidar/odom uwb/odom uwb_ekf/odom

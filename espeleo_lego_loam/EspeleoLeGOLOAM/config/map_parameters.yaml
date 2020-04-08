@@ -1,0 +1,31 @@
+ #Espeleo Map Parameters
+ espeleo_lego_loam:
+
+  # Input Topic
+  pointCloud2In: "/os1_cloud_node/points"
+  imuTopicIn: "/imu/data"
+
+  # Frames
+  init: "/os1_initial"
+  odom: "/os1_odom"
+  imu_odom: "/os1_imu_odom"
+  map: "/initial_base"
+  base: "/base_link"
+
+  #Folder to save PCD point cloud
+  fileDirectoryName: "/tmp/"
+
+  # Loop Clousure settings
+  enableLoopClosure: true       # Enable/Disable [true or false]
+  keyframeRadiuns: 7.0          # key frame that is within n meters from current pose will be considerd for loop closure
+  keyframeNum: 25               # 2n+1 number of hostory key frames will be fused into a submap for loop closure
+  keyframeScore: 0.3            # the smaller the better alignment
+
+  # Mapping settings
+  segmentThetaValue: 10.0                          # Decrese this value may improve accuracy
+  nearestFeatureSearchSqDistValue: 25
+  surroundingKeyframeSearchRadiusValue: 50.0       # Key frame that is within n meters from current pose will be considerd for scan-to-map optimization (when loop closure disabled)
+  surroundingKeyframeSearchNumValue: 50            # Submap size (when loop closure enabled)
+  leafsizemapValue: 0.16                           # Leaf size for KDtree map. Old Value = 0.02 
+  globalMapVisualizationSearchRadiusValue: 1000.0  # Key frames with in n meters will be visualized
+

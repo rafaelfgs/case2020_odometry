@@ -1,0 +1,87 @@
+<launch>
+
+
+    <!-- DID IT RUN ONLINE? -->
+    <arg name="joints"      default="false"/> <!-- false only in corridor -->
+    <arg name="robot_odom"  default="false"/> <!-- true only in hall -->
+    <arg name="loam"        default="false"/> <!-- true only in hall -->
+    <arg name="estimation"  default="false"/> <!-- true only in hall -->
+
+
+    <!-- WORLD TF FOR CLOSED_PATH -->
+    <!--arg name="tf_world"  default="0.0 0.0 0.0 0.0 0.0 0.0174524 0.9998477"/-->
+
+    <!-- WORLD TF FOR CORRIDOR -->
+    <arg name="tf_world"  default="1.0 1.08 0.0 0.0 0.0 0.0 1.0"/>
+
+    <!-- WORLD TF FOR HALL -->
+    <!--arg name="tf_world"  default="0.0 0.0 0.0 0.0 0.0 0.0 1.0"/-->
+
+
+    <!-- SENSOR'S TFs -->
+    <arg name="tf_wheel"        default="0.0 0.0 0.0 0.0 0.0 0.0 1.0"/>
+    <arg name="tf_wheel_ekf"    default="0.0 0.0 0.0 0.0 0.0 0.0 1.0"/>
+    <arg name="tf_visual"       default="0.27 0.0 0.22 0.0 0.0 0.0 1.0"/>
+    <arg name="tf_lidar_noimu"  default="0.0 0.0 0.34 0.5 -0.5 -0.5 0.5"/>
+    <arg name="tf_lidar"        default="0.0 0.0 0.34 0.0 0.0 0.0 1.0"/>
+    <arg name="tf_uwb"          default="0.0 0.0 0.235 0.0 0.0 0.0 1.0"/>
+    <arg name="tf_uwb_ekf"      default="0.0 0.0 0.0 0.0 0.0 0.0 1.0"/>
+
+
+    <!-- SENSOR'S TOPICS -->
+    <arg name="topic_wheel"        default="/robot_odom"/>
+    <arg name="topic_wheel_ekf"    default="/robot_pose_ekf/odom_combined"/>
+    <arg name="topic_visual"       default="/realsense/odom/sample"/>
+    <arg name="topic_lidar_noimu"  default="/laser_odom_to_init"/>
+    <arg name="topic_lidar"        default="/integrated_to_init"/>
+    <arg name="topic_uwb"          default="/decawave/odom"/>
+    <arg name="topic_uwb_ekf"      default="/espeleo/pose"/>
+
+
+    <!-- WHEEL ODOM -->
+    <node pkg="required_files" type="repub_joints.py" name="joints_node" output="screen" unless="$(arg joints)"/>
+    <node pkg="required_files" type="odom_bags.py" name="odom_node" output="screen" unless="$(arg robot_odom)"/>
+    <node pkg="required_files" type="output_correct.py" name="output_wheel_node" args="'wheel' '$(arg topic_wheel)' '$(arg tf_wheel)' '$(arg tf_world)'" output="screen"/>
+
+
+    <!-- WHEEL-EKF ODOM -->
+    <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf" output="screen">
+       <remap from="/odom" to="/robot_odom"/>
+       <remap from="/imu_data" to="/imu/data"/>
+       <param name="vo_used" value="false"/>
+    </node>
+    <node pkg="required_files" type="output_correct.py" name="output_wheel_ekf_node" args="'wheel_ekf' '$(arg topic_wheel_ekf)' '$(arg tf_wheel_ekf)' '$(arg tf_world)'" output="screen"/>
+
+
+    <!-- VISUAL ODOM -->
+    <node pkg="required_files" type="output_correct.py" name="output_visual_node" args="'visual' '$(arg topic_visual)' '$(arg tf_visual)' '$(arg tf_world)'" output="screen"/>
+
+
+    <!-- LIDAR ODOM -->
+    <param name="/use_sim_time" value="true"/>
+    <node pkg="espeleo_lego_loam" type="imageProjectionEspeleo"    name="imageProjectionEspeleo" output="screen" unless="$(arg loam)"/>
+    <node pkg="espeleo_lego_loam" type="featureAssociationEspeleo" name="featureAssociationEspeleo" output="screen" unless="$(arg loam)"/>    
+    <node pkg="espeleo_lego_loam" type="mapOptmizationEspeleo"     name="mapOptmizationEspeleo" output="screen" unless="$(arg loam)"/>    
+    <node pkg="espeleo_lego_loam" type="transformFusionEspeleo"    name="transformFusionEspeleo" output="screen" unless="$(arg loam)"/>  
+    <rosparam command="load" file="$(find espeleo_lego_loam)/config/map_parameters.yaml"/>
+    <node pkg="required_files" type="output_correct.py" name="output_lidar_noimu_node" args="'lidar_noimu' '$(arg topic_lidar_noimu)' '$(arg tf_lidar_noimu)' '$(arg tf_world)'" output="screen"/>
+    <node pkg="required_files" type="output_correct.py" name="output_lidar_node" args="'lidar' '$(arg topic_lidar)' '$(arg tf_lidar)' '$(arg tf_world)'" output="screen"/>
+
+
+    <!-- UWB ODOM -->
+    <node pkg="required_files" type="output_correct.py" name="output_uwb_node" args="'uwb' '$(arg topic_uwb)' '$(arg tf_uwb)' '$(arg tf_world)'" output="screen"/>
+
+
+    <!-- UWB-EKF ODOM -->
+    <node pkg="espeleo_localization" type="state_estimator_decawave" name="state_estimator_decawave" args="" unless="$(arg estimation)">
+        <rosparam command="load" file="$(find espeleo_localization)/config/EKF_params_decawave.yaml"/>
+        <param name="log_path" type="string" value="$(find espeleo_localization)/log_files/"/>
+    </node>
+    <node pkg="required_files" type="output_correct.py" name="output_uwb_ekf_node" args="'uwb_ekf' '$(arg topic_uwb_ekf)' '$(arg tf_uwb_ekf)' '$(arg tf_world)'" output="screen"/>
+
+
+    <!-- RVIZ VIEW -->
+    <node pkg="rviz" type="rviz" name="rviz_node" output="screen" args="-d $(find required_files)/config/rviz.rviz"/>
+
+
+</launch>

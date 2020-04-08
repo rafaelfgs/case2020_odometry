@@ -1,0 +1,22 @@
+<launch>
+    
+    <!--- Sim Time -->
+    <param name="/use_sim_time" value="true" /> <!-- use true for simulation -->
+
+    <!--- Run Rviz 
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find espeleo_lego_loam)/launch/map_trajectory2.rviz" /> -->
+       
+    <!--- TF -->
+    <!--node pkg="tf" type="static_transform_publisher" name="laser_init_to_map"  args="0 0 0.37618 -0.5 0.5 0.5 -0.5 /initial_base /os1_initial 10" />
+    <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser" args="0 0 0.37618 -0.5 0.5 0.5 0.5 /os1_imu_odom /base_link 10" /-->
+    
+    <!--- LeGO-LOAM --> 
+    <node pkg="espeleo_lego_loam" type="imageProjectionEspeleo"    name="imageProjectionEspeleo"    output="screen"/>
+    <node pkg="espeleo_lego_loam" type="featureAssociationEspeleo" name="featureAssociationEspeleo" output="screen"/>    
+    <node pkg="espeleo_lego_loam" type="mapOptmizationEspeleo"     name="mapOptmizationEspeleo"     output="screen"/>    
+    <node pkg="espeleo_lego_loam" type="transformFusionEspeleo"    name="transformFusionEspeleo"    output="screen"/>  
+	
+   <!--- param -->
+    <rosparam command="load" file="$(find espeleo_lego_loam)/config/map_parameters.yaml" /> 
+
+</launch>

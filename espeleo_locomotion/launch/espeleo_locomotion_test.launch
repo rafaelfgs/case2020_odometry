@@ -1,0 +1,4 @@
+<launch>
+	<!-- ESPELEO_LOCOMOTION -->
+	<node name="espeleo_locomotion_test_node" pkg="espeleo_locomotion" type="espeleo_locomotion_test.py" output="screen" respawn="true"/>
+</launch>

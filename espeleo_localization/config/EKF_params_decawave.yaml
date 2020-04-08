@@ -1,0 +1,38 @@
+
+
+#Initial states (x, y, psi, v)
+states_0: [0.0, 0.0, 0.0, 0.0]
+
+# Jacobian of the measurement model
+H: [1.0, 0.0, 0.0, 0.0, #gps
+    0.0, 1.0, 0.0, 0.0, #gps
+    0.0, 0.0, 0.0, 1.0] #vel_x_cmd
+
+#Model Propagation Covariance
+Q: [1.0, 0.0, 0.0, 0.0,
+    0.0, 1.0, 0.0, 0.0,
+    0.0, 0.0, 1.0, 0.0,
+    0.0, 0.0, 0.0, 1.0]
+
+#Covariance matrix of the IMU
+Q_bar: [5.0, 0.0, 0.0, 0.0, 0.0, 0.0, #gyro
+        0.0, 5.0, 0.0, 0.0, 0.0, 0.0, #gyro
+        0.0, 0.0, 5.0, 0.0, 0.0, 0.0, #gyro
+        0.0, 0.0, 0.0, 1000.0, 0.0, 0.0, #acc
+        0.0, 0.0, 0.0, 0.0, 1000.0, 0.0, #acc
+        0.0, 0.0, 0.0, 0.0, 0.0, 1000.0] #acc
+
+#Measurement Covariance
+R: [4.0, 0.0,  0.0, #decawave x
+    0.0, 4.0,  0.0, #decawave x
+    0.0, 0.0, 1.0] #velocity x cmd
+
+#Initial covariance matrix
+P: [1.0, 0.0, 0.0, 0.0,
+    0.0, 1.0, 0.0, 0.0,
+    0.0, 0.0, 1.0, 0.0,
+    0.0, 0.0, 0.0, 1.0]
+
+
+#Threshold for the quality factor of the decawave
+qf_threshold: 0.8

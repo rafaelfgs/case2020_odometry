@@ -23,12 +23,13 @@ First, it is necessary to correct the bag's content by running the node *correct
 * */tf (tf2_msgs/TFMessage)*
 
 Part of these topics were not recorded in some the bags and must be run offline, when possible. This node just republish many of these topics, except for:
-*/decawave/tag_pose* - added an Odometry message
-*/imu/data* - added a TF message
-*/robot_odom* - fixed its covariance
-*/realsense/gyro/sample* and */realsense/accel/sample* - merged into an Imu message
-*/realsense/odom/sample* - used to create a Clock message
-*/tf* - used to generate a Pose Message for estimation (UWB+IMU).
+
+* */decawave/tag_pose* - added an Odometry message
+* */imu/data* - added a TF message
+* */robot_odom* - fixed its covariance
+* */realsense/gyro/sample* and */realsense/accel/sample* - merged into an Imu message
+* */realsense/odom/sample* - used to create a Clock message
+* */tf* - used to generate a Pose Message for estimation (UWB+IMU).
 
 The main parameters of this node can be edited in the file, where:
 
@@ -133,15 +134,20 @@ roslaunch required_files odom_ufmg_case.launch
 
 As many bags do not hold some topics, four boolean arguments were created to select the necessary nodes of the repository:
 
-*joints*: true for bags that contain */deviceX/get_joint_state* (it is false only in corridor experiments)
-*robot_odom*: true for bags that contain */robot_odom* (it is true only in hall experiments)
-*loam*: true for bags that contain */laser_odom_to_init* and */integrated_to_init* (it is true only in hall experiments)
-*estimation*: true for bags that contain */espeleo/pose* (it is true only in hall experiments)
+* *joints*: true for bags that contain */deviceX/get_joint_state* (it is false only in corridor experiments)
+
+* *robot_odom*: true for bags that contain */robot_odom* (it is true only in hall experiments)
+
+* *loam*: true for bags that contain */laser_odom_to_init* and */integrated_to_init* (it is true only in hall experiments)
+
+* *estimation*: true for bags that contain */espeleo/pose* (it is true only in hall experiments)
 
 Another important parameter is the transform from world to the robot initial pose. The vector with position and quaternion of each experiment are:
 
-*[0.0 0.0 0.0 0.0 0.0 0.0174524 0.9998477]*: for the experiment in the closed path
-*[1.0 1.08 0.0 0.0 0.0 0.0 1.0]*: for the experiment in the corridor
-*[0.0 0.0 0.0 0.0 0.0 0.0 1.0]*: for the experiment in the hall
+* *[0.0 0.0 0.0 0.0 0.0 0.0174524 0.9998477]*: for the experiment in the closed path
+
+* *[1.0 1.08 0.0 0.0 0.0 0.0 1.0]*: for the experiment in the corridor
+
+* *[0.0 0.0 0.0 0.0 0.0 0.0 1.0]*: for the experiment in the hall
 
 The sensors' transforms and the name of the sensors' topics are also presented as argument, and can be modified as desired.

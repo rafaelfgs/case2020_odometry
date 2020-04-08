@@ -123,7 +123,7 @@ First, it is necessary to correct the bags, running the first node with the comm
 rosrun required_files odom_ufmg_case.py
 ```
 
-To simplify the command for the cited nodes, a *.launch* file can be used for running all of them (except for *odom_ufmg_case*), through the commands:
+To simplify the command to run the cited nodes, a *.launch* file can be used for running all of them (except for *odom_ufmg_case*), through the commands:
 
 ```bash
 rosbag play PATH_TO_FILE.bag

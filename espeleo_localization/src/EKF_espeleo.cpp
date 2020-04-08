@@ -124,7 +124,7 @@ EKF_Filter::EKF_Filter(VectorXd states_0, double Frequency, MatrixXd H_, MatrixX
 
 
     //Covariance matrix of the IMU
-    Q_bar =Q_bar_;
+    Q_bar = Q_bar_;
     // Q_bar = Q_bar*1000.0;
     // Q_bar = Q_bar/10.0;
 

@@ -1,0 +1,5 @@
+port: "/dev/serial/by-id/usb-SEGGER_J-Link_000760038890-if00"
+tag_name: "DWC4B8"
+rate: 10
+
+
